@@ -12,7 +12,8 @@ body {
 
 .game-container {
     width: 100vw;
-    height: 100vh; /* Ensure it's exactly viewport height */
+    height: 100vh;
+    max-height: 100vh; /* Ensure it's exactly viewport height */
     max-width: 400px;
     max-height: 100vh; /* Added max-height constraint */
     position: relative;
