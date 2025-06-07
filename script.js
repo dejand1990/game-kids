@@ -78,8 +78,7 @@ function drawLaneLines() {
     ctx.setLineDash([]);
 
     // Update dash offset for smooth animation (moving down)
-    // Fixed speed that doesn't depend on screen size
-    dashOffset += animationSpeed * 1.5; // Increased from 1 to 1.5 for slightly faster lane lines
+    dashOffset += animationSpeed * 1.5;
     if (dashOffset >= totalPattern) {
         dashOffset = 0;
     }
@@ -98,8 +97,7 @@ function updateSpeed() {
     speed = Math.max(40, speed);
     speedDisplay.textContent = Math.round(speed);
 
-    // Fixed animation speed that doesn't depend on screen size
-    animationSpeed = (speed / 60) * 2; // Reduced from 3 to 2 for slower overall animation
+    animationSpeed = (speed / 60) * 2;
 }
 
 // Move car left
@@ -121,34 +119,34 @@ function moveRight() {
 // Create a new obstacle
 function createObstacle() {
     const now = Date.now();
-    
-    // Score-based difficulty instead of time-based (better for 3-year-olds)
-    const difficulty = Math.min(score / 500, 1); // Max difficulty after 500 points (very gradual)
 
-    // Start with 6 second gaps, reduce to 2.5 seconds at max difficulty (gentler progression)
-    const minGap = 6000 - (difficulty * 3500);
+    // Score-based difficulty - more challenging from start
+    const difficulty = Math.min(score / 400, 1);
+
+    // Start with 4 second gaps, reduce to 2 seconds at max difficulty
+    const minGap = 4000 - (difficulty * 2000);
 
     if (now - lastObstacleTime < minGap) return;
 
     // Choose random lane
     let lane = Math.floor(Math.random() * 5);
 
-    // For first 50 points, avoid player's lane to be gentle
-    if (score < 50 && lane === currentLane) {
+    // For first 30 points, avoid player's lane
+    if (score < 30 && lane === currentLane) {
         lane = (lane + 1) % 5;
     }
 
-    // For first 25 points, also avoid adjacent lanes (extra gentle start)
-    if (score < 25 && Math.abs(lane - currentLane) <= 1) {
+    // For first 15 points, also avoid adjacent lanes
+    if (score < 15 && Math.abs(lane - currentLane) <= 1) {
         lane = (currentLane + 2) % 5;
     }
 
-    // Very gradual car type introduction based on score
+    // Faster car type introduction based on score
     let maxTypes = 1; // Start with just red cars
-    if (score >= 50) maxTypes = 2;   // Add SUVs after 50 points
-    if (score >= 150) maxTypes = 3;  // Add buses after 150 points  
-    if (score >= 300) maxTypes = 4;  // Add taxis after 300 points
-    if (score >= 500) maxTypes = 5;  // Add trucks after 500 points
+    if (score >= 25) maxTypes = 2;   // Add SUVs after 25 points
+    if (score >= 75) maxTypes = 3;   // Add buses after 75 points
+    if (score >= 150) maxTypes = 4;  // Add taxis after 150 points
+    if (score >= 250) maxTypes = 5;  // Add trucks after 250 points
 
     const typeIndex = Math.floor(Math.random() * maxTypes);
     const type = obstacleTypes[typeIndex];
@@ -165,9 +163,8 @@ function createObstacle() {
 
 // Update obstacles
 function updateObstacles() {
-    // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 1.5; // Increased from 1 to 1.5 for slightly faster speed
-    const moveSpeed = baseSpeed + (animationSpeed * 0.4); // Increased multiplier from 0.3 to 0.4
+    const baseSpeed = 1.5;
+    const moveSpeed = baseSpeed + (animationSpeed * 0.4);
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obstacle = obstacles[i];
@@ -176,14 +173,12 @@ function updateObstacles() {
         // Remove obstacles that are off screen
         if (obstacle.y > canvas.height + obstacle.type.size) {
             obstacles.splice(i, 1);
-            // Add points for successfully avoiding obstacle
             score += obstacle.type.points;
             scoreDisplay.textContent = score;
         }
 
         // Check collision with player
         else if (checkCollision(obstacle)) {
-            // Collision - increment counter and remove obstacle
             collisionCount++;
             collisionsDisplay.textContent = collisionCount;
             score = Math.max(0, score - obstacle.type.points);
@@ -193,11 +188,7 @@ function updateObstacles() {
             // Check if repair is needed
             if (collisionCount >= 10) {
                 gameState = 'repair';
-
-                // Save current game time
                 gameTimeAtRepair = gameTime;
-
-                // Show repair shop and set up broken parts
                 repairShop.style.display = 'flex';
                 repairPartsCount.textContent = carPartsCount;
 
@@ -225,21 +216,16 @@ function updateObstacles() {
                             repairPartsCount.textContent = carPartsCount;
                             part.className = part.className.replace(' broken', '') + ' fixed';
 
-                            // Check if all parts are fixed
                             const brokenParts = document.querySelectorAll('.car-part.broken');
                             backToHighwayBtn.disabled = brokenParts.length > 0;
                             
-                            // Check for game over condition
                             checkGameOverCondition();
                         }
                     };
                 });
 
-                // Check initial state
                 const brokenParts = document.querySelectorAll('.car-part.broken');
                 backToHighwayBtn.disabled = brokenParts.length > 0;
-                
-                // Check for game over condition immediately
                 checkGameOverCondition();
 
                 return;
@@ -254,24 +240,19 @@ function updateObstacles() {
     }
 }
 
-// Check collision between player and obstacle
+// Check collision between player and obstacle - FIXED VERSION
 function checkCollision(obstacle) {
     const laneWidth = canvas.width / 5;
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const obstacleX = obstacle.lane * laneWidth + laneWidth / 2;
 
-    // Get the actual police car element position
-    const policeCarRect = policeCar.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
-    
-    // Calculate the police car's center Y position relative to the canvas
-    const policeCarCenterY = (policeCarRect.top + policeCarRect.height / 2) - canvasRect.top;
+    // Police car is at bottom: 15%, so collision point at 70% from top
+    const playerY = canvas.height * 0.70;
 
-    // Simple collision detection - check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - obstacleX);
-    const verticalDistance = Math.abs(obstacle.y - policeCarCenterY);
+    const verticalDistance = Math.abs(obstacle.y - playerY);
 
-    return horizontalDistance < 35 && verticalDistance < 40; // Tightened collision area
+    return horizontalDistance < 30 && verticalDistance < 35;
 }
 
 // Draw obstacles
@@ -282,14 +263,13 @@ function drawObstacles() {
         const x = obstacle.lane * laneWidth + laneWidth / 2;
         const size = obstacle.type.size;
         const carWidth = size;
-        const carHeight = size * 1.5; // Make cars longer like police car
+        const carHeight = size * 1.5;
 
         // Draw wheels FIRST (behind car body)
         ctx.fillStyle = '#333333';
         ctx.strokeStyle = '#555555';
         ctx.lineWidth = 2;
 
-        // Position wheels like police car
         const wheelSize = 8;
         // Front wheels
         ctx.beginPath();
@@ -313,13 +293,13 @@ function drawObstacles() {
         ctx.fill();
         ctx.stroke();
 
-        // Draw main car body (same style as police car)
+        // Draw main car body
         ctx.fillStyle = obstacle.type.color;
         ctx.beginPath();
         ctx.roundRect(x - carWidth/2, obstacle.y - carHeight/2, carWidth, carHeight, [25, 25, 8, 8]);
         ctx.fill();
 
-        // Add roof section (lighter shade of the car color)
+        // Add roof section
         const roofColor = obstacle.type.color === '#ff6b6b' ? '#ffaaaa' :
                          obstacle.type.color === '#4ecdc4' ? '#88e5de' :
                          obstacle.type.color === '#45b7d1' ? '#7dc9e8' :
@@ -345,19 +325,16 @@ function drawObstacles() {
 
         // Add taxi sign for yellow taxis
         if (obstacle.type.color === '#f9ca24') {
-            // Taxi sign base
             ctx.fillStyle = '#333333';
             ctx.beginPath();
             ctx.roundRect(x - carWidth * 0.15, obstacle.y - carHeight/2 - 8, carWidth * 0.3, carHeight * 0.12, 2);
             ctx.fill();
 
-            // Taxi sign (yellow)
             ctx.fillStyle = '#ffeb3b';
             ctx.beginPath();
             ctx.roundRect(x - carWidth * 0.12, obstacle.y - carHeight/2 - 6, carWidth * 0.24, carHeight * 0.08, 1);
             ctx.fill();
 
-            // "TAXI" text
             ctx.fillStyle = '#333333';
             ctx.font = '6px Arial';
             ctx.textAlign = 'center';
@@ -369,18 +346,15 @@ function drawObstacles() {
 // Create car parts (presents)
 function createCarPart() {
     const now = Date.now();
-
-    // Create car part every 8-15 seconds
     const minGap = 8000 + Math.random() * 7000;
 
     if (now - lastCarPartTime < minGap) return;
 
-    // Find available lanes (not occupied by obstacles)
+    // Find available lanes
     const availableLanes = [];
     for (let lane = 0; lane < 5; lane++) {
         let laneIsClear = true;
 
-        // Check if any obstacle is in this lane and close to spawn position
         for (let obstacle of obstacles) {
             if (obstacle.lane === lane && obstacle.y < 200 && obstacle.y > -100) {
                 laneIsClear = false;
@@ -393,10 +367,8 @@ function createCarPart() {
         }
     }
 
-    // Only spawn if there's at least one clear lane
     if (availableLanes.length === 0) return;
 
-    // Choose random lane from available lanes
     const lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
 
     carParts.push({
@@ -410,27 +382,22 @@ function createCarPart() {
 
 // Update car parts
 function updateCarParts() {
-    // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 1.5; // Increased from 1 to 1.5 for slightly faster speed
-    const moveSpeed = baseSpeed + (animationSpeed * 0.4); // Increased multiplier from 0.3 to 0.4
+    const baseSpeed = 1.5;
+    const moveSpeed = baseSpeed + (animationSpeed * 0.4);
 
     for (let i = carParts.length - 1; i >= 0; i--) {
         const carPart = carParts[i];
         carPart.y += moveSpeed;
 
-        // Remove car parts that are off screen
         if (carPart.y > canvas.height + 30) {
             carParts.splice(i, 1);
         }
 
-        // Check collision with player
         else if (checkCarPartCollision(carPart)) {
-            // Collect car part
             carPartsCount++;
             carPartsDisplay.textContent = carPartsCount;
             carParts.splice(i, 1);
 
-            // Flash effect for collection feedback
             policeCar.style.filter = 'brightness(1.5)';
             setTimeout(() => {
                 policeCar.style.filter = 'brightness(1)';
@@ -439,24 +406,19 @@ function updateCarParts() {
     }
 }
 
-// Check collision between player and car part
+// Check collision between player and car part - FIXED VERSION
 function checkCarPartCollision(carPart) {
     const laneWidth = canvas.width / 5;
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const carPartX = carPart.lane * laneWidth + laneWidth / 2;
 
-    // Get the actual police car element position
-    const policeCarRect = policeCar.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
-    
-    // Calculate the police car's center Y position relative to the canvas
-    const policeCarCenterY = (policeCarRect.top + policeCarRect.height / 2) - canvasRect.top;
+    // Police car is at bottom: 15%, so collision point at 70% from top
+    const playerY = canvas.height * 0.70;
 
-    // Check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - carPartX);
-    const verticalDistance = Math.abs(carPart.y - policeCarCenterY);
+    const verticalDistance = Math.abs(carPart.y - playerY);
 
-    return horizontalDistance < 35 && verticalDistance < 40; // Tightened collision area
+    return horizontalDistance < 30 && verticalDistance < 35;
 }
 
 // Draw car parts (presents)
@@ -468,15 +430,15 @@ function drawCarParts() {
         const size = 25;
 
         // Draw present box
-        ctx.fillStyle = '#ff6b6b'; // Red box
+        ctx.fillStyle = '#ff6b6b';
         ctx.beginPath();
         ctx.roundRect(x - size/2, carPart.y - size/2, size, size, 4);
         ctx.fill();
 
-        // Draw ribbon (cross pattern)
-        ctx.fillStyle = '#ffff99'; // Yellow ribbon
-        ctx.fillRect(x - 2, carPart.y - size/2, 4, size); // Vertical ribbon
-        ctx.fillRect(x - size/2, carPart.y - 2, size, 4); // Horizontal ribbon
+        // Draw ribbon
+        ctx.fillStyle = '#ffff99';
+        ctx.fillRect(x - 2, carPart.y - size/2, 4, size);
+        ctx.fillRect(x - size/2, carPart.y - 2, size, 4);
 
         // Draw bow on top
         ctx.fillStyle = '#ffff99';
@@ -504,7 +466,7 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Event listeners - touchstart only
+// TOUCH CONTROLS ONLY - NO KEYBOARD
 document.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
     
@@ -524,31 +486,16 @@ document.addEventListener('touchstart', (e) => {
     }
 });
 
-// Keyboard controls
-document.addEventListener('keydown', (e) => {
-    if (gameState !== 'highway') return;
-
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-        moveLeft();
-    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        moveRight();
-    }
-});
-
 // Check for game over condition in repair shop
 function checkGameOverCondition() {
     const brokenParts = document.querySelectorAll('.car-part.broken');
     
-    // If there are still broken parts but no car parts to fix them
     if (brokenParts.length > 0 && carPartsCount === 0) {
-        // Show game over state
         document.querySelector('.repair-title').innerHTML = '💥 GAME OVER 💥<br>No more parts to fix your car!';
         document.querySelector('.repair-title').style.color = '#ff4444';
         
-        // Hide the return button and show restart button
         backToHighwayBtn.style.display = 'none';
         
-        // Create restart button if it doesn't exist
         let restartBtn = document.getElementById('restartBtn');
         if (!restartBtn) {
             restartBtn = document.createElement('button');
@@ -565,7 +512,6 @@ function checkGameOverCondition() {
 
 // Restart the entire game
 function restartGame() {
-    // Reset all game variables
     currentLane = 2;
     speed = 60;
     animationSpeed = 1;
@@ -581,20 +527,16 @@ function restartGame() {
     gameState = 'highway';
     gameTimeAtRepair = 0;
     
-    // Reset UI displays
     scoreDisplay.textContent = score;
     carPartsDisplay.textContent = carPartsCount;
     collisionsDisplay.textContent = collisionCount;
     speedDisplay.textContent = Math.round(speed);
     
-    // Reset repair shop state
     document.querySelector('.repair-title').innerHTML = '🔧 REPAIR SHOP 🔧<br>Click on broken parts to fix them!';
     document.querySelector('.repair-title').style.color = '#fff';
     
-    // Hide repair shop
     repairShop.style.display = 'none';
     
-    // Show return button, hide restart button
     backToHighwayBtn.style.display = 'block';
     backToHighwayBtn.disabled = false;
     const restartBtn = document.getElementById('restartBtn');
@@ -602,17 +544,15 @@ function restartGame() {
         restartBtn.style.display = 'none';
     }
     
-    // Reset police car position
     updateCarPosition();
     
-    // Restart game timing
     startTime = Date.now();
     lastObstacleTime = Date.now();
     lastCarPartTime = Date.now();
     
-    // Restart animation
     animate();
 }
+
 backToHighwayBtn.addEventListener('click', () => {
     const brokenParts = document.querySelectorAll('.car-part.broken');
     if (brokenParts.length === 0) {
@@ -621,16 +561,13 @@ backToHighwayBtn.addEventListener('click', () => {
         collisionCount = 0;
         collisionsDisplay.textContent = collisionCount;
 
-        // Clear obstacles and car parts
         obstacles = [];
         carParts = [];
 
-        // Continue from where we left off - adjust startTime to preserve difficulty
         startTime = Date.now() - gameTimeAtRepair;
         lastObstacleTime = Date.now();
         lastCarPartTime = Date.now();
 
-        // Restart animation
         animate();
     }
 });
