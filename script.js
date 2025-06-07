@@ -184,10 +184,13 @@ function updateObstacles() {
         const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
         const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         
+        // Extend collision zone forward by half a car length for better detection
+        const policeCarFront = policeCarTop - (carHeightPercent * 0.5); // Extend forward by half car length
+        
         const obstaclePosition = obstacle.y / canvas.height; // Convert to percentage
         
         if (obstacle.lane === currentLane && 
-            obstaclePosition >= policeCarTop && 
+            obstaclePosition >= policeCarFront && 
             obstaclePosition <= policeCarBottom) {
             
             collisionCount++;
@@ -397,10 +400,13 @@ function updateCarParts() {
         const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
         const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         
+        // Extend collision zone forward by half a car length for better detection
+        const policeCarFront = policeCarTop - (carHeightPercent * 0.5); // Extend forward by half car length
+        
         const carPartPosition = carPart.y / canvas.height; // Convert to percentage
         
         if (carPart.lane === currentLane && 
-            carPartPosition >= policeCarTop && 
+            carPartPosition >= policeCarFront && 
             carPartPosition <= policeCarBottom) {
             
             carPartsCount++;
