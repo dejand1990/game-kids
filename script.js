@@ -176,74 +176,10 @@ function updateObstacles() {
             score += obstacle.type.points;
             scoreDisplay.textContent = score;
         }
-
-        // Check collision with player
-        else if (checkCollision(obstacle)) {
-            collisionCount++;
-            collisionsDisplay.textContent = collisionCount;
-            score = Math.max(0, score - obstacle.type.points);
-            scoreDisplay.textContent = score;
-            obstacles.splice(i, 1);
-
-            // Check if repair is needed
-            if (collisionCount >= 10) {
-                gameState = 'repair';
-                gameTimeAtRepair = gameTime;
-                repairShop.style.display = 'flex';
-                repairPartsCount.textContent = carPartsCount;
-
-                // Randomly break 2-4 parts
-                const carParts = document.querySelectorAll('.car-part');
-                const numBroken = 2 + Math.floor(Math.random() * 3);
-                const shuffled = Array.from(carParts).sort(() => 0.5 - Math.random());
-
-                // Reset all parts to fixed first
-                carParts.forEach(part => {
-                    part.className = part.className.replace(/ broken| fixed/g, '') + ' fixed';
-                });
-
-                // Break random parts
-                for (let i = 0; i < numBroken; i++) {
-                    shuffled[i].className = shuffled[i].className.replace(/ fixed/g, '') + ' broken';
-                }
-
-                // Add click listeners to broken parts
-                carParts.forEach(part => {
-                    part.onclick = () => {
-                        if (part.classList.contains('broken') && carPartsCount > 0) {
-                            carPartsCount--;
-                            carPartsDisplay.textContent = carPartsCount;
-                            repairPartsCount.textContent = carPartsCount;
-                            part.className = part.className.replace(' broken', '') + ' fixed';
-
-                            const brokenParts = document.querySelectorAll('.car-part.broken');
-                            backToHighwayBtn.disabled = brokenParts.length > 0;
-                            
-                            checkGameOverCondition();
-                        }
-                    };
-                });
-
-                const brokenParts = document.querySelectorAll('.car-part.broken');
-                backToHighwayBtn.disabled = brokenParts.length > 0;
-                checkGameOverCondition();
-
-                return;
-            }
-
-            // Flash effect for collision feedback
-            policeCar.style.filter = 'brightness(0.5)';
-            setTimeout(() => {
-                policeCar.style.filter = 'brightness(1)';
-            }, 200);
-        }
     }
 }
 
-// Check collision between player and obstacle - REMOVED
-function checkCollision(obstacle) {
-    return false; // No collision detection
-}
+
 
 // Draw obstacles
 function drawObstacles() {
@@ -382,24 +318,10 @@ function updateCarParts() {
         if (carPart.y > canvas.height + 30) {
             carParts.splice(i, 1);
         }
-
-        else if (checkCarPartCollision(carPart)) {
-            carPartsCount++;
-            carPartsDisplay.textContent = carPartsCount;
-            carParts.splice(i, 1);
-
-            policeCar.style.filter = 'brightness(1.5)';
-            setTimeout(() => {
-                policeCar.style.filter = 'brightness(1)';
-            }, 200);
-        }
     }
 }
 
-// Check collision between player and car part - REMOVED
-function checkCarPartCollision(carPart) {
-    return false; // No collision detection
-}
+
 
 // Draw car parts (presents)
 function drawCarParts() {
