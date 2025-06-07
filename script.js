@@ -260,7 +260,7 @@ function checkCollision(obstacle) {
 
     // Simple collision detection - check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - obstacleX);
-    const verticalDistance = Math.abs(obstacle.y - (canvas.height * 0.60)); // Updated to match CSS top: 60%
+    const verticalDistance = Math.abs(obstacle.y - (canvas.height * 0.85)); // Updated to match CSS bottom: 15% (85% from top)
 
     return horizontalDistance < 40 && verticalDistance < 50; // Adjusted for larger sizes
 }
@@ -438,7 +438,7 @@ function checkCarPartCollision(carPart) {
 
     // Check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - carPartX);
-    const verticalDistance = Math.abs(carPart.y - (canvas.height * 0.60)); // Updated to match CSS top: 60%
+    const verticalDistance = Math.abs(carPart.y - (canvas.height * 0.85)); // Updated to match CSS bottom: 15% (85% from top)
 
     return horizontalDistance < 40 && verticalDistance < 50;
 }
