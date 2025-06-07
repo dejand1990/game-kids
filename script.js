@@ -245,10 +245,12 @@ function updateObstacles() {
                 return;
             }
 
-            // Flash effect for collision feedback
-            policeCar.style.filter = 'brightness(0.5)';
+            // Flash effect for collision feedback - RED for crashes
+            policeCar.style.filter = 'brightness(0.5) hue-rotate(0deg) saturate(2)';
+            policeCar.style.boxShadow = '0 0 20px red';
             setTimeout(() => {
                 policeCar.style.filter = 'brightness(1)';
+                policeCar.style.boxShadow = 'none';
             }, 200);
         }
     }
@@ -413,9 +415,12 @@ function updateCarParts() {
             carPartsDisplay.textContent = carPartsCount;
             carParts.splice(i, 1);
 
-            policeCar.style.filter = 'brightness(1.5)';
+            // Flash effect for car part collection - GREEN for presents
+            policeCar.style.filter = 'brightness(1.5) hue-rotate(120deg) saturate(2)';
+            policeCar.style.boxShadow = '0 0 20px green';
             setTimeout(() => {
                 policeCar.style.filter = 'brightness(1)';
+                policeCar.style.boxShadow = 'none';
             }, 200);
         }
     }
