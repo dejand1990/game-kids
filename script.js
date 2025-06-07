@@ -499,17 +499,6 @@ document.addEventListener('touchstart', (e) => {
     }
 });
 
-// Keyboard controls
-document.addEventListener('keydown', (e) => {
-    if (gameState !== 'highway') return;
-
-    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-        moveLeft();
-    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        moveRight();
-    }
-});
-
 // Check for game over condition in repair shop
 function checkGameOverCondition() {
     const brokenParts = document.querySelectorAll('.car-part.broken');
