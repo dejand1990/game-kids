@@ -4,7 +4,7 @@ body {
     background: #000;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to flex-start */
     min-height: 100vh;
     font-family: Arial, sans-serif;
     overflow: hidden;
@@ -33,7 +33,7 @@ body {
 
 .police-car {
     position: absolute;
-    bottom: 25%;
+    top: 60%; /* Changed from bottom: 25% to top: 60% */
     left: 50%;
     transform: translateX(-50%);
     width: 50px;
