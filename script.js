@@ -479,30 +479,23 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Event listeners for touch/click controls with debounce
-let lastMoveTime = 0;
-const MOVE_DEBOUNCE = 200; // 200ms debounce
-
-document.addEventListener('pointerdown', (e) => {
+// Event listeners - touchstart only
+document.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
     
-    const now = Date.now();
-    if (now - lastMoveTime < MOVE_DEBOUNCE) return; // Prevent rapid movements
-    
-    e.preventDefault(); // Prevent any other events
+    e.preventDefault();
 
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
+    const touch = e.touches[0];
+    const clickX = touch.clientX - rect.left;
     const canvasWidth = rect.width;
-    const carPosition = (currentLane + 0.5) / 5; // Current car position as fraction (0-1)
-    const clickPosition = clickX / canvasWidth; // Click position as fraction (0-1)
+    const carPosition = (currentLane + 0.5) / 5;
+    const clickPosition = clickX / canvasWidth;
 
     if (clickPosition < carPosition && currentLane > 0) {
         moveLeft();
-        lastMoveTime = now;
     } else if (clickPosition > carPosition && currentLane < 4) {
         moveRight();
-        lastMoveTime = now;
     }
 });
 
