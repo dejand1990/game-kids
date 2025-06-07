@@ -69,7 +69,8 @@ function drawLaneLines() {
     ctx.setLineDash([]);
 
     // Update dash offset for smooth animation (moving down)
-    dashOffset += animationSpeed;
+    // Fixed speed that doesn't depend on screen size
+    dashOffset += animationSpeed * 2; // Fixed multiplier for consistent lane line speed
     if (dashOffset >= totalPattern) {
         dashOffset = 0;
     }
@@ -88,7 +89,8 @@ function updateSpeed() {
     speed = Math.max(40, speed);
     speedDisplay.textContent = Math.round(speed);
 
-    animationSpeed = (speed / 60) * 6; // Much faster lane lines (3x faster)
+    // Fixed animation speed that doesn't depend on screen size
+    animationSpeed = (speed / 60) * 3; // Reduced multiplier for consistent speed
 }
 
 // Move car left
@@ -152,7 +154,9 @@ function createObstacle() {
 
 // Update obstacles
 function updateObstacles() {
-    const moveSpeed = 0.8 + (animationSpeed * 0.3); // Slower than lane lines
+    // Fixed move speed that doesn't depend on screen size
+    const baseSpeed = 2; // Base pixels per frame
+    const moveSpeed = baseSpeed + (animationSpeed * 0.5);
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obstacle = obstacles[i];
@@ -388,7 +392,9 @@ function createCarPart() {
 
 // Update car parts
 function updateCarParts() {
-    const moveSpeed = 0.8 + (animationSpeed * 0.3); // Same speed as obstacles
+    // Fixed move speed that doesn't depend on screen size
+    const baseSpeed = 2; // Base pixels per frame
+    const moveSpeed = baseSpeed + (animationSpeed * 0.5);
 
     for (let i = carParts.length - 1; i >= 0; i--) {
         const carPart = carParts[i];
@@ -474,8 +480,10 @@ function animate() {
 }
 
 // Event listeners for touch/click controls
+let touchHandled = false;
+
 document.addEventListener('click', (e) => {
-    if (gameState !== 'highway') return;
+    if (gameState !== 'highway' || touchHandled) return;
 
     const rect = canvas.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
@@ -492,6 +500,9 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
+    
+    e.preventDefault(); // Prevent click event from firing
+    touchHandled = true;
 
     const rect = canvas.getBoundingClientRect();
     const touch = e.touches[0];
@@ -505,6 +516,11 @@ document.addEventListener('touchstart', (e) => {
     } else if (clickPosition > carPosition && currentLane < 4) {
         moveRight();
     }
+    
+    // Reset touch flag after a short delay
+    setTimeout(() => {
+        touchHandled = false;
+    }, 100);
 });
 
 // Keyboard controls
