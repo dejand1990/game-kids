@@ -266,36 +266,74 @@ body {
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     z-index: 100;
+    padding: 0;
 }
 
 .repair-title {
     color: #fff;
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin: 10px 0;
     text-align: center;
+    width: 100%;
 }
 
-.repair-area {
+.parts-bar {
+    width: 100%;
+    height: 25%;
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
-    gap: 30px;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
     justify-content: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.part-inventory {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 15px 30px;
+    text-align: center;
+    color: white;
+}
+
+.part-inventory div:first-child {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.part-count {
+    font-size: 32px;
+    font-weight: bold;
+    color: #90EE90;
+}
+
+.car-repair-area {
+    width: 100%;
+    height: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .car-image-container {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 90%;
+    height: 90%;
+    max-width: 500px;
+    max-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .police-car-bg {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
     background: url('images/police-car.png') no-repeat center;
     background-size: contain;
     position: relative;
@@ -303,12 +341,12 @@ body {
 
 .car-part {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s;
-    border: 2px solid #fff;
+    border: 3px solid #fff;
     z-index: 10;
 }
 
@@ -319,47 +357,25 @@ body {
 .car-part.broken {
     background: #ff4444;
     animation: blink 1s infinite;
-    box-shadow: 0 0 8px #ff4444;
+    box-shadow: 0 0 12px #ff4444;
 }
 
 .car-part.fixed {
     background: #4CAF50;
-    box-shadow: 0 0 8px #4CAF50;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.3; }
-}
-
-.available-parts {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.part-inventory {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    color: white;
-}
-
-.part-count {
-    font-size: 18px;
-    font-weight: bold;
-    color: #90EE90;
+    box-shadow: 0 0 12px #4CAF50;
 }
 
 .back-to-highway {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     background: #4CAF50;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: 12px 25px;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
