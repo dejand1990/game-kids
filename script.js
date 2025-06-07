@@ -70,7 +70,7 @@ function drawLaneLines() {
 
     // Update dash offset for smooth animation (moving down)
     // Fixed speed that doesn't depend on screen size
-    dashOffset += animationSpeed * 2; // Fixed multiplier for consistent lane line speed
+    dashOffset += animationSpeed * 1; // Reduced from 2 to 1 for slower lane lines
     if (dashOffset >= totalPattern) {
         dashOffset = 0;
     }
@@ -90,7 +90,7 @@ function updateSpeed() {
     speedDisplay.textContent = Math.round(speed);
 
     // Fixed animation speed that doesn't depend on screen size
-    animationSpeed = (speed / 60) * 3; // Reduced multiplier for consistent speed
+    animationSpeed = (speed / 60) * 2; // Reduced from 3 to 2 for slower overall animation
 }
 
 // Move car left
@@ -155,8 +155,8 @@ function createObstacle() {
 // Update obstacles
 function updateObstacles() {
     // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 2; // Base pixels per frame
-    const moveSpeed = baseSpeed + (animationSpeed * 0.5);
+    const baseSpeed = 1; // Reduced from 2 to 1 for slower speed
+    const moveSpeed = baseSpeed + (animationSpeed * 0.3); // Reduced multiplier from 0.5 to 0.3
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obstacle = obstacles[i];
@@ -393,8 +393,8 @@ function createCarPart() {
 // Update car parts
 function updateCarParts() {
     // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 2; // Base pixels per frame
-    const moveSpeed = baseSpeed + (animationSpeed * 0.5);
+    const baseSpeed = 1; // Reduced from 2 to 1 for slower speed
+    const moveSpeed = baseSpeed + (animationSpeed * 0.3); // Reduced multiplier from 0.5 to 0.3
 
     for (let i = carParts.length - 1; i >= 0; i--) {
         const carPart = carParts[i];
@@ -495,6 +495,17 @@ document.addEventListener('touchstart', (e) => {
     if (clickPosition < carPosition && currentLane > 0) {
         moveLeft();
     } else if (clickPosition > carPosition && currentLane < 4) {
+        moveRight();
+    }
+});
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+    if (gameState !== 'highway') return;
+
+    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        moveLeft();
+    } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         moveRight();
     }
 });
