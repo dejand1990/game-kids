@@ -207,12 +207,12 @@ function updateObstacles() {
                 repairPartsCount.textContent = carPartsCount;
 
                 // Randomly break 2-4 parts
-                const carParts = document.querySelectorAll('.car-part');
+                const repairableParts = document.querySelectorAll('.car-part');
                 const numBroken = 2 + Math.floor(Math.random() * 3);
-                const shuffled = Array.from(carParts).sort(() => 0.5 - Math.random());
+                const shuffled = Array.from(repairableParts).sort(() => 0.5 - Math.random());
 
                 // Reset all parts to fixed first
-                carParts.forEach(part => {
+                repairableParts.forEach(part => {
                     part.className = part.className.replace(/ broken| fixed/g, '') + ' fixed';
                 });
 
@@ -222,7 +222,7 @@ function updateObstacles() {
                 }
 
                 // Add click listeners to broken parts
-                carParts.forEach(part => {
+                repairableParts.forEach(part => {
                     part.onclick = () => {
                         if (part.classList.contains('broken') && carPartsCount > 0) {
                             carPartsCount--;
