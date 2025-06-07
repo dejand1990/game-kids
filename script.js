@@ -121,32 +121,34 @@ function moveRight() {
 // Create a new obstacle
 function createObstacle() {
     const now = Date.now();
-    const difficulty = Math.min(gameTime / 60000, 1); // Max difficulty after 1 minute (60 seconds)
+    
+    // Score-based difficulty instead of time-based (better for 3-year-olds)
+    const difficulty = Math.min(score / 500, 1); // Max difficulty after 500 points (very gradual)
 
-    // Start with 5 second gaps, reduce to 1.2 seconds over 1 minute
-    const minGap = 5000 - (difficulty * 3800);
+    // Start with 6 second gaps, reduce to 2.5 seconds at max difficulty (gentler progression)
+    const minGap = 6000 - (difficulty * 3500);
 
     if (now - lastObstacleTime < minGap) return;
 
     // Choose random lane
     let lane = Math.floor(Math.random() * 5);
 
-    // For first 10 seconds, avoid player's lane to be gentle
-    if (gameTime < 10000 && lane === currentLane) {
+    // For first 50 points, avoid player's lane to be gentle
+    if (score < 50 && lane === currentLane) {
         lane = (lane + 1) % 5;
     }
 
-    // For first 5 seconds, also avoid adjacent lanes
-    if (gameTime < 5000 && Math.abs(lane - currentLane) <= 1) {
+    // For first 25 points, also avoid adjacent lanes (extra gentle start)
+    if (score < 25 && Math.abs(lane - currentLane) <= 1) {
         lane = (currentLane + 2) % 5;
     }
 
-    // Faster obstacle type introduction over 1 minute
+    // Very gradual car type introduction based on score
     let maxTypes = 1; // Start with just red cars
-    if (difficulty > 0.15) maxTypes = 2; // Add SUVs after 9 seconds
-    if (difficulty > 0.35) maxTypes = 3; // Add buses after 21 seconds
-    if (difficulty > 0.60) maxTypes = 4; // Add taxis after 36 seconds
-    if (difficulty > 0.80) maxTypes = 5; // Add trucks after 48 seconds
+    if (score >= 50) maxTypes = 2;   // Add SUVs after 50 points
+    if (score >= 150) maxTypes = 3;  // Add buses after 150 points  
+    if (score >= 300) maxTypes = 4;  // Add taxis after 300 points
+    if (score >= 500) maxTypes = 5;  // Add trucks after 500 points
 
     const typeIndex = Math.floor(Math.random() * maxTypes);
     const type = obstacleTypes[typeIndex];
