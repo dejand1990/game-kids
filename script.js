@@ -479,15 +479,14 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Event listeners for touch/click controls
-document.addEventListener('touchstart', (e) => {
+// Event listeners for touch/click controls using pointer events
+document.addEventListener('pointerdown', (e) => {
     if (gameState !== 'highway') return;
     
     e.preventDefault(); // Prevent any other events
 
     const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
-    const clickX = touch.clientX - rect.left;
+    const clickX = e.clientX - rect.left;
     const canvasWidth = rect.width;
     const carPosition = (currentLane + 0.5) / 5; // Current car position as fraction (0-1)
     const clickPosition = clickX / canvasWidth; // Click position as fraction (0-1)
@@ -498,25 +497,6 @@ document.addEventListener('touchstart', (e) => {
         moveRight();
     }
 });
-
-// Fallback click event for desktop (only if no touch capability)
-if (!('ontouchstart' in window)) {
-    document.addEventListener('click', (e) => {
-        if (gameState !== 'highway') return;
-
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const canvasWidth = rect.width;
-        const carPosition = (currentLane + 0.5) / 5; // Current car position as fraction (0-1)
-        const clickPosition = clickX / canvasWidth; // Click position as fraction (0-1)
-
-        if (clickPosition < carPosition && currentLane > 0) {
-            moveLeft();
-        } else if (clickPosition > carPosition && currentLane < 4) {
-            moveRight();
-        }
-    });
-}
 
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
