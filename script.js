@@ -480,29 +480,10 @@ function animate() {
 }
 
 // Event listeners for touch/click controls
-let touchHandled = false;
-
-document.addEventListener('click', (e) => {
-    if (gameState !== 'highway' || touchHandled) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const canvasWidth = rect.width;
-    const carPosition = (currentLane + 0.5) / 5; // Current car position as fraction (0-1)
-    const clickPosition = clickX / canvasWidth; // Click position as fraction (0-1)
-
-    if (clickPosition < carPosition && currentLane > 0) {
-        moveLeft();
-    } else if (clickPosition > carPosition && currentLane < 4) {
-        moveRight();
-    }
-});
-
 document.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
     
-    e.preventDefault(); // Prevent click event from firing
-    touchHandled = true;
+    e.preventDefault(); // Prevent any other events
 
     const rect = canvas.getBoundingClientRect();
     const touch = e.touches[0];
@@ -516,12 +497,26 @@ document.addEventListener('touchstart', (e) => {
     } else if (clickPosition > carPosition && currentLane < 4) {
         moveRight();
     }
-    
-    // Reset touch flag after a short delay
-    setTimeout(() => {
-        touchHandled = false;
-    }, 100);
 });
+
+// Fallback click event for desktop (only if no touch capability)
+if (!('ontouchstart' in window)) {
+    document.addEventListener('click', (e) => {
+        if (gameState !== 'highway') return;
+
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const canvasWidth = rect.width;
+        const carPosition = (currentLane + 0.5) / 5; // Current car position as fraction (0-1)
+        const clickPosition = clickX / canvasWidth; // Click position as fraction (0-1)
+
+        if (clickPosition < carPosition && currentLane > 0) {
+            moveLeft();
+        } else if (clickPosition > carPosition && currentLane < 4) {
+            moveRight();
+        }
+    });
+}
 
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
