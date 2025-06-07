@@ -462,8 +462,8 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// TOUCH CONTROLS ONLY - NO KEYBOARD
-document.addEventListener('touchstart', (e) => {
+// TOUCH CONTROLS ONLY - NO KEYBOARD - CANVAS ONLY
+canvas.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
     
     e.preventDefault();
