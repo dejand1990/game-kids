@@ -240,25 +240,9 @@ function updateObstacles() {
     }
 }
 
-// Check collision between player and obstacle - COMPLETELY REWRITTEN
+// Check collision between player and obstacle - REMOVED
 function checkCollision(obstacle) {
-    // Only check collision if obstacle and player are in the same lane
-    if (obstacle.lane !== currentLane) {
-        return false;
-    }
-
-    // Police car is positioned at bottom 15% of screen
-    // In canvas coordinates, this means the car is at around 85% down from top
-    // But we want collision to happen when obstacle reaches the TOP of the police car
-    // So we need to trigger collision much earlier
-    
-    // Calculate where the top of the police car would be in canvas coordinates
-    const policeCarTop = canvas.height * 0.75; // 75% down from canvas top
-    
-    // Check if obstacle has reached the police car area
-    const obstacleBottom = obstacle.y + (obstacle.type.size * 1.5) / 2; // Bottom of obstacle
-    
-    return obstacleBottom >= policeCarTop;
+    return false; // No collision detection
 }
 
 // Draw obstacles
@@ -412,21 +396,9 @@ function updateCarParts() {
     }
 }
 
-// Check collision between player and car part - COMPLETELY REWRITTEN
+// Check collision between player and car part - REMOVED
 function checkCarPartCollision(carPart) {
-    // Only check collision if car part and player are in the same lane
-    if (carPart.lane !== currentLane) {
-        return false;
-    }
-
-    // Police car is positioned at bottom 15% of screen
-    // Calculate where the top of the police car would be in canvas coordinates
-    const policeCarTop = canvas.height * 0.75; // 75% down from canvas top
-    
-    // Check if car part has reached the police car area
-    const carPartBottom = carPart.y + 12; // Bottom of car part (25px / 2 = 12)
-    
-    return carPartBottom >= policeCarTop;
+    return false; // No collision detection
 }
 
 // Draw car parts (presents)
