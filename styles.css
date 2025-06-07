@@ -4,16 +4,17 @@ body {
     background: #000;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Changed from center to flex-start */
-    min-height: 100vh;
+    align-items: flex-start;
+    height: 100vh; /* Changed from min-height to height */
     font-family: Arial, sans-serif;
     overflow: hidden;
 }
 
 .game-container {
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* Ensure it's exactly viewport height */
     max-width: 400px;
+    max-height: 100vh; /* Added max-height constraint */
     position: relative;
     background: linear-gradient(to right,
         #2d5a27 0%, #2d5a27 8%,
