@@ -246,8 +246,9 @@ function checkCollision(obstacle) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const obstacleX = obstacle.lane * laneWidth + laneWidth / 2;
 
-    // Police car is at bottom: 15%, so collision point at 70% from top
-    const playerY = canvas.height * 0.70;
+    // Police car is at bottom: 15%, so collision point needs to be much higher
+    // Moving it to 60% from top to match where the car actually appears
+    const playerY = canvas.height * 0.60;
 
     const horizontalDistance = Math.abs(playerX - obstacleX);
     const verticalDistance = Math.abs(obstacle.y - playerY);
@@ -412,8 +413,9 @@ function checkCarPartCollision(carPart) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const carPartX = carPart.lane * laneWidth + laneWidth / 2;
 
-    // Police car is at bottom: 15%, so collision point at 70% from top
-    const playerY = canvas.height * 0.70;
+    // Police car is at bottom: 15%, so collision point needs to be much higher
+    // Moving it to 60% from top to match where the car actually appears
+    const playerY = canvas.height * 0.60;
 
     const horizontalDistance = Math.abs(playerX - carPartX);
     const verticalDistance = Math.abs(carPart.y - playerY);
