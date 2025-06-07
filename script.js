@@ -37,14 +37,14 @@ const obstacleTypes = [
 function resizeCanvas() {
     const container = canvas.parentElement;
     const rect = container.getBoundingClientRect();
-    
+
     // Ensure canvas never exceeds container bounds
     const maxWidth = Math.floor(rect.width * 0.84);
     const maxHeight = Math.floor(rect.height);
-    
+
     canvas.width = maxWidth;
     canvas.height = maxHeight;
-    
+
     // Ensure canvas stays within bounds
     canvas.style.width = maxWidth + 'px';
     canvas.style.height = maxHeight + 'px';
@@ -177,22 +177,23 @@ function updateObstacles() {
             scoreDisplay.textContent = score;
         }
 
-        // Collision detection: same lane + obstacle overlaps with police car area
-        // Police car bottom is at 85% (bottom: 15%), car height is 120px
-        // Convert 120px to canvas percentage: 120px relative to typical mobile screen
-        const carHeightPercent = 0.15; // Approximately 15% of screen height for 120px car
-        const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
+        // FIXED COLLISION DETECTION: Proper police car collision zone
+        // Police car is positioned at bottom: 15% with height 120px
+        // Calculate more precise collision boundaries
+        const carHeightPercent = 0.2; // 20% of screen height for police car
+        const policeCarTop = 0.85 - carHeightPercent; // Top of police car (65% from top)
         const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         
-        // Extend collision zone forward by half a car length for better detection
-        const policeCarFront = policeCarTop - (carHeightPercent * 0.5); // Extend forward by half car length
+        // Only extend collision zone slightly forward for better gameplay, not backward
+        const policeCarFront = policeCarTop - (carHeightPercent * 0.3); // Small forward extension
         
-        const obstaclePosition = obstacle.y / canvas.height; // Convert to percentage
-        
-        if (obstacle.lane === currentLane && 
-            obstaclePosition >= policeCarFront && 
-            obstaclePosition <= policeCarBottom) {
-            
+        const obstacleTopPercent = obstacle.y / canvas.height;
+        const obstacleBottomPercent = (obstacle.y + obstacle.type.size * 1.5) / canvas.height;
+
+        if (obstacle.lane === currentLane &&
+            obstacleBottomPercent >= policeCarFront &&
+            obstacleTopPercent <= policeCarBottom) {
+
             collisionCount++;
             collisionsDisplay.textContent = collisionCount;
             score = Math.max(0, score - obstacle.type.points);
@@ -232,7 +233,7 @@ function updateObstacles() {
 
                             const brokenParts = document.querySelectorAll('.car-part.broken');
                             backToHighwayBtn.disabled = brokenParts.length > 0;
-                            
+
                             checkGameOverCondition();
                         }
                     };
@@ -255,8 +256,6 @@ function updateObstacles() {
         }
     }
 }
-
-
 
 // Draw obstacles
 function drawObstacles() {
@@ -396,21 +395,18 @@ function updateCarParts() {
             carParts.splice(i, 1);
         }
 
-        // Collision detection for car parts: same lane + overlaps with police car area
-        // Police car bottom is at 85% (bottom: 15%), car height is ~15% of screen
-        const carHeightPercent = 0.15; 
-        const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
-        const policeCarBottom = 0.85; // Bottom of police car (85% from top)
-        
-        // Extend collision zone forward by half a car length for better detection
-        const policeCarFront = policeCarTop - (carHeightPercent * 0.5); // Extend forward by half car length
-        
-        const carPartPosition = carPart.y / canvas.height; // Convert to percentage
-        
-        if (carPart.lane === currentLane && 
-            carPartPosition >= policeCarFront && 
+        // FIXED COLLISION DETECTION for car parts - same logic as obstacles
+        const carHeightPercent = 0.2;
+        const policeCarTop = 0.85 - carHeightPercent;
+        const policeCarBottom = 0.85;
+        const policeCarFront = policeCarTop - (carHeightPercent * 0.3);
+
+        const carPartPosition = carPart.y / canvas.height;
+
+        if (carPart.lane === currentLane &&
+            carPartPosition >= policeCarFront &&
             carPartPosition <= policeCarBottom) {
-            
+
             carPartsCount++;
             carPartsDisplay.textContent = carPartsCount;
             carParts.splice(i, 1);
@@ -425,8 +421,6 @@ function updateCarParts() {
         }
     }
 }
-
-
 
 // Draw car parts (presents)
 function drawCarParts() {
@@ -476,7 +470,7 @@ function animate() {
 // TOUCH CONTROLS ONLY - NO KEYBOARD - CANVAS ONLY
 canvas.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
-    
+
     e.preventDefault();
 
     const rect = canvas.getBoundingClientRect();
@@ -496,13 +490,13 @@ canvas.addEventListener('touchstart', (e) => {
 // Check for game over condition in repair shop
 function checkGameOverCondition() {
     const brokenParts = document.querySelectorAll('.car-part.broken');
-    
+
     if (brokenParts.length > 0 && carPartsCount === 0) {
         document.querySelector('.repair-title').innerHTML = '💥 GAME OVER 💥<br>No more parts to fix your car!';
         document.querySelector('.repair-title').style.color = '#ff4444';
-        
+
         backToHighwayBtn.style.display = 'none';
-        
+
         let restartBtn = document.getElementById('restartBtn');
         if (!restartBtn) {
             restartBtn = document.createElement('button');
@@ -533,30 +527,30 @@ function restartGame() {
     lastCarPartTime = 0;
     gameState = 'highway';
     gameTimeAtRepair = 0;
-    
+
     scoreDisplay.textContent = score;
     carPartsDisplay.textContent = carPartsCount;
     collisionsDisplay.textContent = collisionCount;
     speedDisplay.textContent = Math.round(speed);
-    
+
     document.querySelector('.repair-title').innerHTML = '🔧 REPAIR SHOP 🔧<br>Click on broken parts to fix them!';
     document.querySelector('.repair-title').style.color = '#fff';
-    
+
     repairShop.style.display = 'none';
-    
+
     backToHighwayBtn.style.display = 'block';
     backToHighwayBtn.disabled = false;
     const restartBtn = document.getElementById('restartBtn');
     if (restartBtn) {
         restartBtn.style.display = 'none';
     }
-    
+
     updateCarPosition();
-    
+
     startTime = Date.now();
     lastObstacleTime = Date.now();
     lastCarPartTime = Date.now();
-    
+
     animate();
 }
 
