@@ -181,16 +181,13 @@ function updateObstacles() {
         // Police car bottom is at 85% (bottom: 15%), car height is 120px
         // Convert 120px to canvas percentage: 120px relative to typical mobile screen
         const carHeightPercent = 0.15; // Approximately 15% of screen height for 120px car
-        const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
-        
-        // Extend collision zone forward by another car length for better detection
-        const policeCarFront = policeCarTop - carHeightPercent; // Extend forward (55% from top)
+        const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         
         const obstaclePosition = obstacle.y / canvas.height; // Convert to percentage
         
         if (obstacle.lane === currentLane && 
-            obstaclePosition >= policeCarFront && 
+            obstaclePosition >= policeCarTop && 
             obstaclePosition <= policeCarBottom) {
             
             collisionCount++;
@@ -397,16 +394,13 @@ function updateCarParts() {
         // Collision detection for car parts: same lane + overlaps with police car area
         // Police car bottom is at 85% (bottom: 15%), car height is ~15% of screen
         const carHeightPercent = 0.15; 
-        const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         const policeCarTop = 0.85 - carHeightPercent; // Top of police car (70% from top)
-        
-        // Extend collision zone forward by another car length for better detection
-        const policeCarFront = policeCarTop - carHeightPercent; // Extend forward (55% from top)
+        const policeCarBottom = 0.85; // Bottom of police car (85% from top)
         
         const carPartPosition = carPart.y / canvas.height; // Convert to percentage
         
         if (carPart.lane === currentLane && 
-            carPartPosition >= policeCarFront && 
+            carPartPosition >= policeCarTop && 
             carPartPosition <= policeCarBottom) {
             
             carPartsCount++;
