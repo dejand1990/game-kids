@@ -571,18 +571,31 @@ function restartGame() {
 backToHighwayBtn.addEventListener('click', () => {
     const brokenParts = document.querySelectorAll('.car-part.broken');
     if (brokenParts.length === 0) {
+        // Hide repair shop
         repairShop.style.display = 'none';
+        
+        // Reset game state
         gameState = 'highway';
         collisionCount = 0;
         collisionsDisplay.textContent = collisionCount;
 
+        // Clear any existing obstacles and car parts
         obstacles = [];
         carParts = [];
 
-        startTime = Date.now() - gameTimeAtRepair;
-        lastObstacleTime = Date.now();
+        // Restore proper car position before continuing
+        updateCarPosition();
+        
+        // Reset timing to continue from where we left off
+        const timeSpentInRepair = Date.now() - (startTime + gameTimeAtRepair);
+        startTime = Date.now() - gameTimeAtRepair; // Restore original game time
+        lastObstacleTime = Date.now() - 1000; // Allow immediate obstacle creation
         lastCarPartTime = Date.now();
 
+        // Remove any collision effects that might be stuck
+        policeCar.classList.remove('collision-effect', 'collection-effect');
+
+        // Restart the animation loop
         animate();
     }
 });
