@@ -260,17 +260,18 @@ function checkCollision(obstacle) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const obstacleX = obstacle.lane * laneWidth + laneWidth / 2;
 
-    // Calculate player position accounting for bottom: 15% positioning
-    // Since we're using bottom: 15%, the car is at 85% from top of the actual visible area
-    const gameContainer = document.querySelector('.game-container');
-    const containerHeight = gameContainer.offsetHeight;
-    const playerY = containerHeight * 0.85;
+    // Get the actual police car element position
+    const policeCarRect = policeCar.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    
+    // Calculate the police car's center Y position relative to the canvas
+    const policeCarCenterY = (policeCarRect.top + policeCarRect.height / 2) - canvasRect.top;
 
     // Simple collision detection - check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - obstacleX);
-    const verticalDistance = Math.abs(obstacle.y - playerY);
+    const verticalDistance = Math.abs(obstacle.y - policeCarCenterY);
 
-    return horizontalDistance < 40 && verticalDistance < 50;
+    return horizontalDistance < 35 && verticalDistance < 40; // Tightened collision area
 }
 
 // Draw obstacles
@@ -444,17 +445,18 @@ function checkCarPartCollision(carPart) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const carPartX = carPart.lane * laneWidth + laneWidth / 2;
 
-    // Calculate player position accounting for bottom: 15% positioning
-    // Since we're using bottom: 15%, the car is at 85% from top of the actual visible area
-    const gameContainer = document.querySelector('.game-container');
-    const containerHeight = gameContainer.offsetHeight;
-    const playerY = containerHeight * 0.85;
+    // Get the actual police car element position
+    const policeCarRect = policeCar.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    
+    // Calculate the police car's center Y position relative to the canvas
+    const policeCarCenterY = (policeCarRect.top + policeCarRect.height / 2) - canvasRect.top;
 
     // Check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - carPartX);
-    const verticalDistance = Math.abs(carPart.y - playerY);
+    const verticalDistance = Math.abs(carPart.y - policeCarCenterY);
 
-    return horizontalDistance < 40 && verticalDistance < 50;
+    return horizontalDistance < 35 && verticalDistance < 40; // Tightened collision area
 }
 
 // Draw car parts (presents)
