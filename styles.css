@@ -11,6 +11,7 @@
 html {
     width: 100vw;
     height: 100vh;
+    height: 100svh; /* Use small viewport height to account for browser UI */
     overflow: hidden;
     position: fixed;
     touch-action: none;
@@ -19,16 +20,20 @@ html {
 body {
     width: 100vw;
     height: 100vh;
+    height: 100svh; /* Use small viewport height to account for browser UI */
     background: #000;
     font-family: Arial, sans-serif;
     overflow: hidden;
     position: fixed;
     touch-action: none;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .game-container {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     max-width: 400px;
     position: absolute;
     top: 50%;
