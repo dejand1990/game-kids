@@ -213,29 +213,45 @@ function updateObstacles() {
 
                 // Reset all parts to fixed first
                 repairableParts.forEach(part => {
-                    part.className = part.className.replace(/ broken| fixed/g, '') + ' fixed';
+                    part.classList.remove('broken', 'fixed');
+                    part.classList.add('fixed');
                 });
 
                 // Break random parts
                 for (let i = 0; i < numBroken; i++) {
-                    shuffled[i].className = shuffled[i].className.replace(/ fixed/g, '') + ' broken';
+                    shuffled[i].classList.remove('fixed');
+                    shuffled[i].classList.add('broken');
                 }
 
                 // Add click listeners to broken parts
                 repairableParts.forEach(part => {
-                    part.onclick = () => {
+                    // Remove any existing event listeners
+                    part.onclick = null;
+                    part.ontouchstart = null;
+                    
+                    // Add both click and touch event listeners for better mobile support
+                    const repairPart = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
                         if (part.classList.contains('broken') && carPartsCount > 0) {
                             carPartsCount--;
                             carPartsDisplay.textContent = carPartsCount;
                             repairPartsCount.textContent = carPartsCount;
-                            part.className = part.className.replace(' broken', '') + ' fixed';
-
+                            
+                            // Remove broken class and add fixed class
+                            part.classList.remove('broken');
+                            part.classList.add('fixed');
+                            
                             const brokenParts = document.querySelectorAll('.car-part.broken');
                             backToHighwayBtn.disabled = brokenParts.length > 0;
 
                             checkGameOverCondition();
                         }
                     };
+                    
+                    part.onclick = repairPart;
+                    part.ontouchstart = repairPart;
                 });
 
                 const brokenParts = document.querySelectorAll('.car-part.broken');
