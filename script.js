@@ -157,7 +157,7 @@ function updateSpeed() {
     speed = Math.max(40, speed);
     speedDisplay.textContent = Math.round(speed);
     
-    animationSpeed = (speed / 60) * 6; // Much faster lane lines (3x faster)
+    animationSpeed = (speed / 60) * 4; // Slower lane lines
 }
 
 // Move car left
@@ -221,7 +221,7 @@ function createObstacle() {
 
 // Update obstacles
 function updateObstacles() {
-    const moveSpeed = 0.8 + (animationSpeed * 0.3); // Slower than lane lines
+    const moveSpeed = 0.6 + (animationSpeed * 0.25); // Slower speed
     
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obstacle = obstacles[i];
@@ -451,7 +451,7 @@ function createCarPart() {
 
 // Update car parts
 function updateCarParts() {
-    const moveSpeed = 0.8 + (animationSpeed * 0.3); // Same speed as obstacles
+    const moveSpeed = 0.6 + (animationSpeed * 0.25); // Same speed as obstacles
     
     for (let i = carParts.length - 1; i >= 0; i--) {
         const carPart = carParts[i];
