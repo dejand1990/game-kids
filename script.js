@@ -37,8 +37,17 @@ const obstacleTypes = [
 function resizeCanvas() {
     const container = canvas.parentElement;
     const rect = container.getBoundingClientRect();
-    canvas.width = rect.width * 0.84;
-    canvas.height = rect.height;
+    
+    // Ensure canvas never exceeds container bounds
+    const maxWidth = Math.floor(rect.width * 0.84);
+    const maxHeight = Math.floor(rect.height);
+    
+    canvas.width = maxWidth;
+    canvas.height = maxHeight;
+    
+    // Ensure canvas stays within bounds
+    canvas.style.width = maxWidth + 'px';
+    canvas.style.height = maxHeight + 'px';
 }
 
 // Draw lane lines with smooth animation
