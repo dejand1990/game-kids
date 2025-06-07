@@ -79,7 +79,7 @@ function drawLaneLines() {
 
     // Update dash offset for smooth animation (moving down)
     // Fixed speed that doesn't depend on screen size
-    dashOffset += animationSpeed * 1; // Reduced from 2 to 1 for slower lane lines
+    dashOffset += animationSpeed * 1.5; // Increased from 1 to 1.5 for slightly faster lane lines
     if (dashOffset >= totalPattern) {
         dashOffset = 0;
     }
@@ -164,8 +164,8 @@ function createObstacle() {
 // Update obstacles
 function updateObstacles() {
     // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 1; // Reduced from 2 to 1 for slower speed
-    const moveSpeed = baseSpeed + (animationSpeed * 0.3); // Reduced multiplier from 0.5 to 0.3
+    const baseSpeed = 1.5; // Increased from 1 to 1.5 for slightly faster speed
+    const moveSpeed = baseSpeed + (animationSpeed * 0.4); // Increased multiplier from 0.3 to 0.4
 
     for (let i = obstacles.length - 1; i >= 0; i--) {
         const obstacle = obstacles[i];
@@ -402,8 +402,8 @@ function createCarPart() {
 // Update car parts
 function updateCarParts() {
     // Fixed move speed that doesn't depend on screen size
-    const baseSpeed = 1; // Reduced from 2 to 1 for slower speed
-    const moveSpeed = baseSpeed + (animationSpeed * 0.3); // Reduced multiplier from 0.5 to 0.3
+    const baseSpeed = 1.5; // Increased from 1 to 1.5 for slightly faster speed
+    const moveSpeed = baseSpeed + (animationSpeed * 0.4); // Increased multiplier from 0.3 to 0.4
 
     for (let i = carParts.length - 1; i >= 0; i--) {
         const carPart = carParts[i];
