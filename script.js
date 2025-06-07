@@ -479,9 +479,15 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Event listeners for touch/click controls using pointer events
+// Event listeners for touch/click controls with debounce
+let lastMoveTime = 0;
+const MOVE_DEBOUNCE = 200; // 200ms debounce
+
 document.addEventListener('pointerdown', (e) => {
     if (gameState !== 'highway') return;
+    
+    const now = Date.now();
+    if (now - lastMoveTime < MOVE_DEBOUNCE) return; // Prevent rapid movements
     
     e.preventDefault(); // Prevent any other events
 
@@ -493,8 +499,10 @@ document.addEventListener('pointerdown', (e) => {
 
     if (clickPosition < carPosition && currentLane > 0) {
         moveLeft();
+        lastMoveTime = now;
     } else if (clickPosition > carPosition && currentLane < 4) {
         moveRight();
+        lastMoveTime = now;
     }
 });
 
