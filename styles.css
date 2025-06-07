@@ -60,7 +60,7 @@ body {
 
 .police-car {
     position: absolute;
-    top: 60%;
+    bottom: 15%; /* Changed from top: 60% to bottom: 15% */
     left: 50%;
     transform: translateX(-50%);
     width: 50px;
