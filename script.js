@@ -574,10 +574,19 @@ backToHighwayBtn.addEventListener('click', () => {
     }
 });
 
-// Prevent scrolling on mobile
-document.addEventListener('touchmove', (e) => {
+// Prevent scrolling on mobile - apply to entire game container
+const gameContainer = document.querySelector('.game-container');
+gameContainer.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
+
+// Also prevent zoom on grass areas
+gameContainer.addEventListener('touchstart', (e) => {
+    // If touch is not on canvas, prevent default to stop zoom
+    if (e.target !== canvas) {
+        e.preventDefault();
+    }
+});
 
 let startTime;
 // Initialize game
