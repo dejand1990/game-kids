@@ -275,8 +275,8 @@ body {
 
 .car-part {
     position: absolute;
-    width: 15px;
-    height: 15px;
+    width: 37.5px;
+    height: 37.5px;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s;
