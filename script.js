@@ -260,11 +260,17 @@ function checkCollision(obstacle) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const obstacleX = obstacle.lane * laneWidth + laneWidth / 2;
 
+    // Calculate player position accounting for bottom: 15% positioning
+    // Since we're using bottom: 15%, the car is at 85% from top of the actual visible area
+    const gameContainer = document.querySelector('.game-container');
+    const containerHeight = gameContainer.offsetHeight;
+    const playerY = containerHeight * 0.85;
+
     // Simple collision detection - check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - obstacleX);
-    const verticalDistance = Math.abs(obstacle.y - (canvas.height * 0.85)); // Updated to match CSS bottom: 15% (85% from top)
+    const verticalDistance = Math.abs(obstacle.y - playerY);
 
-    return horizontalDistance < 40 && verticalDistance < 50; // Adjusted for larger sizes
+    return horizontalDistance < 40 && verticalDistance < 50;
 }
 
 // Draw obstacles
@@ -438,9 +444,15 @@ function checkCarPartCollision(carPart) {
     const playerX = currentLane * laneWidth + laneWidth / 2;
     const carPartX = carPart.lane * laneWidth + laneWidth / 2;
 
+    // Calculate player position accounting for bottom: 15% positioning
+    // Since we're using bottom: 15%, the car is at 85% from top of the actual visible area
+    const gameContainer = document.querySelector('.game-container');
+    const containerHeight = gameContainer.offsetHeight;
+    const playerY = containerHeight * 0.85;
+
     // Check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - carPartX);
-    const verticalDistance = Math.abs(carPart.y - (canvas.height * 0.85)); // Updated to match CSS bottom: 15% (85% from top)
+    const verticalDistance = Math.abs(carPart.y - playerY);
 
     return horizontalDistance < 40 && verticalDistance < 50;
 }
