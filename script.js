@@ -466,7 +466,7 @@ function animate() {
 
     requestAnimationFrame(animate);
 }
-
+/*
 // Event listeners for touch/click controls
 document.addEventListener('click', (e) => {
     if (gameState !== 'highway') return;
@@ -482,7 +482,7 @@ document.addEventListener('click', (e) => {
     } else if (clickPosition > carPosition && currentLane < 4) {
         moveRight();
     }
-});
+});*/
 
 document.addEventListener('touchstart', (e) => {
     if (gameState !== 'highway') return;
@@ -500,7 +500,7 @@ document.addEventListener('touchstart', (e) => {
         moveRight();
     }
 });
-
+/*
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
     if (gameState !== 'highway') return;
@@ -510,7 +510,7 @@ document.addEventListener('keydown', (e) => {
     } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         moveRight();
     }
-});
+});*/
 
 // Repair shop button
 backToHighwayBtn.addEventListener('click', () => {
