@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highway Police Car Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="grass-texture grass-left"></div>
+        <div class="grass-texture grass-right"></div>
+
+        <canvas class="highway-canvas" id="highway" width="280" height="600"></canvas>
+
+        <div class="police-car" id="policeCar">
+            <div class="wheel front-left"></div>
+            <div class="wheel front-right"></div>
+            <div class="wheel rear-left"></div>
+            <div class="wheel rear-right"></div>
+            <div class="siren-lights">
+                <div class="siren red"></div>
+                <div class="siren blue"></div>
+            </div>
+            <div class="car-roof">
+                <div class="police-stripe"></div>
+                <div class="car-window"></div>
+            </div>
+            <div class="car-body">
+                <div class="car-lights">
+                    <div class="taillight left"></div>
+                    <div class="taillight right"></div>
+                </div>
+                <div class="police-text">POLICE</div>
+            </div>
+        </div>
+
+        <div class="speed-indicator">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="car-parts">Car Parts: <span id="carParts">0</span></div>
+            <div class="collisions">Crashes: <span id="collisions">0</span>/10</div>
+            Speed: <span id="speed">60</span> mph
+        </div>
+
+        <div class="repair-shop" id="repairShop">
+            <div class="repair-title">🔧 REPAIR SHOP 🔧<br>Click on broken parts to fix them!</div>
+            <div class="repair-area">
+                <div class="car-image-container">
+                    <div class="police-car-bg">
+                        <div class="car-part headlight-left" data-part="headlight" style="top: 25%; left: 25%;"></div>
+                        <div class="car-part headlight-right" data-part="headlight" style="top: 25%; right: 25%;"></div>
+                        <div class="car-part taillight-left" data-part="taillight" style="bottom: 35%; left: 20%;"></div>
+                        <div class="car-part taillight-right" data-part="taillight" style="bottom: 35%; right: 20%;"></div>
+                        <div class="car-part siren-left" data-part="siren" style="top: 15%; left: 35%;"></div>
+                        <div class="car-part siren-right" data-part="siren" style="top: 15%; right: 35%;"></div>
+                        <div class="car-part wheel-left" data-part="wheel" style="bottom: 15%; left: 25%;"></div>
+                        <div class="car-part wheel-right" data-part="wheel" style="bottom: 15%; right: 25%;"></div>
+                    </div>
+                </div>
+                <div class="available-parts">
+                    <div class="part-inventory">
+                        <div>Car Parts Available</div>
+                        <div class="part-count" id="repairPartsCount">0</div>
+                    </div>
+                </div>
+            </div>
+            <button class="back-to-highway" id="backToHighway" disabled>Return to Highway</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100vw;
+    height: 100vh;
+    max-width: 400px;
+    position: relative;
+    background: linear-gradient(to right,
+        #2d5a27 0%, #2d5a27 8%,
+        #333 8%, #333 92%,
+        #2d5a27 92%, #2d5a27 100%
+    );
+    overflow: hidden;
+}
+
+.highway-canvas {
+    position: absolute;
+    left: 8%;
+    width: 84%;
+    height: 100%;
+    background: #333;
+}
+
+.police-car {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 120px;
+    z-index: 10;
+    transition: left 0.3s ease;
+}
+
+.car-body {
+    width: 100%;
+    height: 90px;
+    background: #3b82f6;
+    border-radius: 25px 25px 8px 8px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+
+.car-roof {
+    width: 75%;
+    height: 35px;
+    background: #ffffff;
+    border-radius: 15px 15px 3px 3px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid #ddd;
+    z-index: 5;
+}
+
+.car-window {
+    width: 70%;
+    height: 13px;
+    background: rgba(50, 50, 50, 0.8);
+    border-radius: 3px 3px 0px 0px;
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.police-stripe {
+    width: 70%;
+    height: 8px;
+    background: linear-gradient(to right, #ff0000 0%, #ff0000 45%, #0000ff 55%, #0000ff 100%);
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    animation: policeFlash 0.8s linear infinite;
+}
+
+@keyframes policeFlash {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.siren-lights {
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 10px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.siren {
+    width: 20px;
+    height: 12px;
+    border-radius: 50%;
+    animation: sirenFlash 0.6s linear infinite;
+}
+
+.siren.red {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+}
+
+.siren.blue {
+    background: #0000ff;
+    box-shadow: 0 0 15px #0000ff;
+    animation-delay: -0.3s;
+}
+
+@keyframes sirenFlash {
+    0%, 50% { opacity: 1; transform: scale(1); }
+    51%, 100% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.car-lights {
+    position: absolute;
+    bottom: 8px;
+    width: 100%;
+    height: 12px;
+}
+
+.taillight {
+    width: 16px;
+    height: 12px;
+    background: #ff4444;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 0;
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
+}
+
+.taillight.left { left: 12%; }
+.taillight.right { right: 12%; }
+
+.police-text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 8px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.wheel {
+    width: 16px;
+    height: 16px;
+    background: #222;
+    border-radius: 50%;
+    position: absolute;
+    border: 2px solid #555;
+    z-index: 1;
+}
+
+.wheel.front-left { left: -8px; top: 20px; }
+.wheel.front-right { right: -8px; top: 20px; }
+.wheel.rear-left { left: -8px; top: 70px; }
+.wheel.rear-right { right: -8px; top: 70px; }
+
+.grass-texture {
+    position: absolute;
+    width: 8%;
+    height: 100%;
+    background: #2d5a27;
+}
+
+.grass-left {
+    left: 0;
+}
+
+.grass-right {
+    right: 0;
+}
+
+.speed-indicator {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.score {
+    display: block;
+    font-size: 18px;
+    color: #ffff99;
+    margin-bottom: 5px;
+}
+
+.car-parts {
+    display: block;
+    font-size: 16px;
+    color: #90EE90;
+    margin-bottom: 3px;
+}
+
+.collisions {
+    display: block;
+    font-size: 14px;
+    color: #ff9999;
+    margin-bottom: 3px;
+}
+
+.repair-shop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #4a5568, #2d3748);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.repair-title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.repair-area {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.car-image-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.police-car-bg {
+    width: 300px;
+    height: 300px;
+    background: url('images/police-car.png') no-repeat center;
+    background-size: contain;
+    position: relative;
+}
+
+.car-part {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid #fff;
+    z-index: 10;
+}
+
+.car-part:hover {
+    transform: scale(1.3);
+}
+
+.car-part.broken {
+    background: #ff4444;
+    animation: blink 1s infinite;
+    box-shadow: 0 0 10px #ff4444;
+}
+
+.car-part.fixed {
+    background: #4CAF50;
+    box-shadow: 0 0 10px #4CAF50;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+.available-parts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.part-inventory {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    color: white;
+}
+
+.part-count {
+    font-size: 24px;
+    font-weight: bold;
+    color: #90EE90;
+}
+
+.back-to-highway {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.back-to-highway:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+.back-to-highway:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+}
