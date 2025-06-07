@@ -213,6 +213,9 @@ function updateObstacles() {
                             // Check if all parts are fixed
                             const brokenParts = document.querySelectorAll('.car-part.broken');
                             backToHighwayBtn.disabled = brokenParts.length > 0;
+                            
+                            // Check for game over condition
+                            checkGameOverCondition();
                         }
                     };
                 });
@@ -220,6 +223,9 @@ function updateObstacles() {
                 // Check initial state
                 const brokenParts = document.querySelectorAll('.car-part.broken');
                 backToHighwayBtn.disabled = brokenParts.length > 0;
+                
+                // Check for game over condition immediately
+                checkGameOverCondition();
 
                 return;
             }
@@ -241,7 +247,7 @@ function checkCollision(obstacle) {
 
     // Simple collision detection - check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - obstacleX);
-    const verticalDistance = Math.abs(obstacle.y - (canvas.height * 0.75)); // Updated player position (was 0.8, now 0.75)
+    const verticalDistance = Math.abs(obstacle.y - (canvas.height * 0.60)); // Updated to match CSS top: 60%
 
     return horizontalDistance < 40 && verticalDistance < 50; // Adjusted for larger sizes
 }
@@ -417,7 +423,7 @@ function checkCarPartCollision(carPart) {
 
     // Check if in same lane and close vertically
     const horizontalDistance = Math.abs(playerX - carPartX);
-    const verticalDistance = Math.abs(carPart.y - (canvas.height * 0.75)); // Updated player position (was 0.8, now 0.75)
+    const verticalDistance = Math.abs(carPart.y - (canvas.height * 0.60)); // Updated to match CSS top: 60%
 
     return horizontalDistance < 40 && verticalDistance < 50;
 }
@@ -512,7 +518,84 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Repair shop button
+// Check for game over condition in repair shop
+function checkGameOverCondition() {
+    const brokenParts = document.querySelectorAll('.car-part.broken');
+    
+    // If there are still broken parts but no car parts to fix them
+    if (brokenParts.length > 0 && carPartsCount === 0) {
+        // Show game over state
+        document.querySelector('.repair-title').innerHTML = '💥 GAME OVER 💥<br>No more parts to fix your car!';
+        document.querySelector('.repair-title').style.color = '#ff4444';
+        
+        // Hide the return button and show restart button
+        backToHighwayBtn.style.display = 'none';
+        
+        // Create restart button if it doesn't exist
+        let restartBtn = document.getElementById('restartBtn');
+        if (!restartBtn) {
+            restartBtn = document.createElement('button');
+            restartBtn.id = 'restartBtn';
+            restartBtn.className = 'back-to-highway';
+            restartBtn.style.background = '#ff6b6b';
+            restartBtn.textContent = 'Restart Game';
+            restartBtn.onclick = restartGame;
+            backToHighwayBtn.parentNode.appendChild(restartBtn);
+        }
+        restartBtn.style.display = 'block';
+    }
+}
+
+// Restart the entire game
+function restartGame() {
+    // Reset all game variables
+    currentLane = 2;
+    speed = 60;
+    animationSpeed = 1;
+    dashOffset = 0;
+    obstacles = [];
+    carParts = [];
+    gameTime = 0;
+    score = 0;
+    carPartsCount = 0;
+    collisionCount = 0;
+    lastObstacleTime = 0;
+    lastCarPartTime = 0;
+    gameState = 'highway';
+    gameTimeAtRepair = 0;
+    
+    // Reset UI displays
+    scoreDisplay.textContent = score;
+    carPartsDisplay.textContent = carPartsCount;
+    collisionsDisplay.textContent = collisionCount;
+    speedDisplay.textContent = Math.round(speed);
+    
+    // Reset repair shop state
+    document.querySelector('.repair-title').innerHTML = '🔧 REPAIR SHOP 🔧<br>Click on broken parts to fix them!';
+    document.querySelector('.repair-title').style.color = '#fff';
+    
+    // Hide repair shop
+    repairShop.style.display = 'none';
+    
+    // Show return button, hide restart button
+    backToHighwayBtn.style.display = 'block';
+    backToHighwayBtn.disabled = false;
+    const restartBtn = document.getElementById('restartBtn');
+    if (restartBtn) {
+        restartBtn.style.display = 'none';
+    }
+    
+    // Reset police car position
+    updateCarPosition();
+    
+    // Restart game timing
+    startTime = Date.now();
+    lastObstacleTime = Date.now();
+    lastCarPartTime = Date.now();
+    
+    // Restart animation
+    animate();
+}
 backToHighwayBtn.addEventListener('click', () => {
     const brokenParts = document.querySelectorAll('.car-part.broken');
     if (brokenParts.length === 0) {
